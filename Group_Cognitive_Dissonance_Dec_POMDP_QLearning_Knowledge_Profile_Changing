@@ -1,0 +1,58 @@
+"""
+
+In this scenario, each individual in the group would be modeled as an agent with a set of beliefs or attitudes about climate change. The group's goal would be to reduce their collective cognitive dissonance by achieving a shared understanding and belief about climate change.
+
+The input to the Dec-POMDP would be the searches of the group members on Google Trends about climate change. This data would be used to estimate the beliefs and attitudes of each agent regarding climate change. Additionally, the cognitive dissonance of each agent would be modeled as a variable that changes after every exposure to knowledge.
+
+"""
+
+#If you need teh code please contact us at : kaouter.karboub@gmail.com or ajit.jaokar@gmail.com
+
+
+#Code Snippet: 
+
+"""
+
+import numpy as np
+import pandas as pd
+import random
+import matplotlib.pyplot as plt
+
+class Agent:
+    def __init__(self, id, belief_low, belief_high, true_state, alpha, gamma, epsilon):
+        self.id = id
+        self.belief = np.random.uniform(belief_low, belief_high)
+        self.true_state = true_state
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.Q = {'search': 0, 'ignore': 0}
+        self.knowledge = np.zeros((2, 2))
+    
+    def choose_action(self, state):
+        legal_actions = self.get_legal_actions(state)
+        if not legal_actions:
+            return None
+        if random.uniform(0, 1) < self.epsilon:
+            return random.choice(legal_actions)
+        else:
+            max_q_value = max([self.get_q_value(state, action) for action in legal_actions])
+            actions_with_max_q_value = [action for action in legal_actions if self.get_q_value(state, action) == max_q_value]
+            if len(actions_with_max_q_value) == 1:
+                return actions_with_max_q_value[0]
+            else:
+                return random.choice(actions_with_max_q_value)
+    
+    def update_belief(self, observation, action):
+        if action == 'search':
+            belief_update = observation / self.knowledge[action == 'search', action == 'search']
+            self.knowledge[action == 'search', action == 'search'] += 1
+        else:
+            belief_update = 1
+        self.belief *= belief_update
+    
+    def acquire_knowledge(self, agents):
+
+
+.......................................................
+
